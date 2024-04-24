@@ -27,24 +27,29 @@ fun main() {
         println("File not found.")
         return
     }
+    try {
+        val visitor = KotlinFileVisitor()
+        visitor.visitFile(fileName)
+        when (metricType) {
+            1 -> {
+                val sortedFunctionComplexityCount =
+                    visitor.getFunctionComplexityCondCount().entries.sortedByDescending { it.value }
+                println("Top 3 methods/functions with the highest complexity scores:")
+                for (i in 0..<minOf(3, sortedFunctionComplexityCount.size)) {
+                    println("${sortedFunctionComplexityCount[i].key}: ${sortedFunctionComplexityCount[i].value}")
+                }
+            }
 
-    val visitor = KotlinFileVisitor()
-    visitor.visitFile(fileName)
-    when (metricType) {
-        1 -> {
-            val sortedFunctionComplexityCount= visitor.getFunctionComplexityCondCount().entries.sortedByDescending { it.value }
-            println("Top 3 methods/functions with the highest complexity scores:")
-            for (i in 0..<minOf(3, sortedFunctionComplexityCount.size)) {
-                println("${sortedFunctionComplexityCount[i].key}: ${sortedFunctionComplexityCount[i].value}")
+            2 -> {
+                val sortedFunctionComplexityDepth =
+                    visitor.getFunctionComplexityCondDepth().entries.sortedByDescending { it.value }
+                println("Top 3 methods/functions with the highest complexity scores:")
+                for (i in 0..<minOf(3, sortedFunctionComplexityDepth.size)) {
+                    println("${sortedFunctionComplexityDepth[i].key}: ${sortedFunctionComplexityDepth[i].value}")
+                }
             }
         }
-
-        2 -> {
-            val sortedFunctionComplexityDepth = visitor.getFunctionComplexityCondDepth().entries.sortedByDescending { it.value }
-            println("Top 3 methods/functions with the highest complexity scores:")
-            for (i in 0..<minOf(3, sortedFunctionComplexityDepth.size)) {
-                println("${sortedFunctionComplexityDepth[i].key}: ${sortedFunctionComplexityDepth[i].value}")
-            }
-        }
+    } catch (e: Exception) {
+        println("This file can't be parsed.")
     }
 }

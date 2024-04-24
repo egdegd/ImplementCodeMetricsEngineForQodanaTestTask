@@ -1,3 +1,4 @@
+
 import kotlinx.ast.common.AstSource
 import kotlinx.ast.common.ast.Ast
 import kotlinx.ast.common.ast.AstNode
@@ -11,11 +12,7 @@ class KotlinFileVisitor {
     fun visitFile(fileName: String) {
         val source = AstSource.File(fileName)
         val ast = KotlinGrammarAntlrKotlinParser.parseKotlinFile(source)
-        try {
-            visitAst(ast, level = 0, "")
-        } catch (e: Exception) {
-            throw IllegalStateException("Error generating API surface for $fileName", e)
-        }
+        visitAst(ast, level = 0, "")
     }
 
     fun getFunctionComplexityCondCount(): MutableMap<String, Int> {
@@ -62,6 +59,8 @@ class KotlinFileVisitor {
             }
             "functionDeclaration" -> {
                 newFunName = node.identifierName()
+                functionComplexityCondCount[newFunName] = 0
+                functionComplexityCondDepth[newFunName] = 0
             }
 
         }
