@@ -1,7 +1,50 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+package kotlinx.ast.example
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+import KotlinFileVisitor
+import java.io.File
+
+fun main() {
+
+    println("Enter the name of the file:")
+    val fileName = readlnOrNull()?.trim()
+
+    if (fileName.isNullOrBlank()) {
+        println("Invalid file name.")
+        return
+    }
+
+    println("Enter the type of metric (1 for number of conditional statements, 2 for maximum depth of conditional statements):")
+    val metricType = readlnOrNull()?.toIntOrNull()
+
+    if (metricType !in 1..2) {
+        println("Invalid metric type.")
+        return
+    }
+
+    val file = File(fileName)
+
+    if (!file.exists()) {
+        println("File not found.")
+        return
+    }
+
+    val visitor = KotlinFileVisitor()
+    visitor.visitFile(fileName)
+    when (metricType) {
+        1 -> {
+            val sortedFunctionComplexityCount= visitor.getFunctionComplexityCondCount().entries.sortedByDescending { it.value }
+            println("Top 3 methods/functions with the highest complexity scores:")
+            for (i in 0..<minOf(3, sortedFunctionComplexityCount.size)) {
+                println("${sortedFunctionComplexityCount[i].key}: ${sortedFunctionComplexityCount[i].value}")
+            }
+        }
+
+        2 -> {
+            val sortedFunctionComplexityDepth = visitor.getFunctionComplexityCondDepth().entries.sortedByDescending { it.value }
+            println("Top 3 methods/functions with the highest complexity scores:")
+            for (i in 0..<minOf(3, sortedFunctionComplexityDepth.size)) {
+                println("${sortedFunctionComplexityDepth[i].key}: ${sortedFunctionComplexityDepth[i].value}")
+            }
+        }
+    }
 }
