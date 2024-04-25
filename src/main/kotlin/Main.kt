@@ -1,6 +1,3 @@
-package kotlinx.ast.example
-
-import KotlinFileVisitor
 import java.io.File
 
 fun main() {
@@ -12,7 +9,12 @@ fun main() {
         println("Invalid file name.")
         return
     }
+    val file = File(fileName)
 
+    if (!file.exists()) {
+        println("File not found.")
+        return
+    }
     println("Enter the type of metric (1 for number of conditional statements, 2 for maximum depth of conditional statements):")
     val metricType = readlnOrNull()?.toIntOrNull()
 
@@ -21,12 +23,6 @@ fun main() {
         return
     }
 
-    val file = File(fileName)
-
-    if (!file.exists()) {
-        println("File not found.")
-        return
-    }
     try {
         val visitor = KotlinFileVisitor()
         visitor.visitFile(fileName)
