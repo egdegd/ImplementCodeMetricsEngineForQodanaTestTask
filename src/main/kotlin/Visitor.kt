@@ -35,27 +35,26 @@ class KotlinFileVisitor {
         // Do Nothing
     }
 
+    private fun conditionalExpressionProcessing(level: Int, funName: String): Int {
+        val newLevel: Int = level + 1
+        functionComplexityCondCount[funName] = functionComplexityCondCount.getOrDefault(funName, 0) + 1
+        functionComplexityCondDepth[funName] =
+            functionComplexityCondDepth.getOrDefault(funName, 0).coerceAtLeast(newLevel)
+        return newLevel
+    }
+
     private fun visitAstNode(node: AstNode, level: Int, funName: String) {
-        var newLevel = level
-        var newFunName = funName
+        var newLevel: Int = level
+        var newFunName: String = funName
         when(node.description) {
             "ifExpression" -> {
-                newLevel = level + 1
-                functionComplexityCondCount[funName] = functionComplexityCondCount.getOrDefault(funName, 0) + 1
-                functionComplexityCondDepth[funName] =
-                    functionComplexityCondDepth.getOrDefault(funName, 0).coerceAtLeast(newLevel)
+                newLevel = conditionalExpressionProcessing(level, funName)
             }
             "loopStatement" -> {
-                newLevel = level + 1
-                functionComplexityCondCount[funName] = functionComplexityCondCount.getOrDefault(funName, 0) + 1
-                functionComplexityCondDepth[funName] =
-                    functionComplexityCondDepth.getOrDefault(funName, 0).coerceAtLeast(newLevel)
+                newLevel = conditionalExpressionProcessing(level, funName)
             }
             "whenExpression" -> {
-                newLevel = level + 1
-                functionComplexityCondCount[funName] = functionComplexityCondCount.getOrDefault(funName, 0) + 1
-                functionComplexityCondDepth[funName] =
-                    functionComplexityCondDepth.getOrDefault(funName, 0).coerceAtLeast(newLevel)
+                newLevel = conditionalExpressionProcessing(level, funName)
             }
             "functionDeclaration" -> {
                 newFunName = node.identifierName()

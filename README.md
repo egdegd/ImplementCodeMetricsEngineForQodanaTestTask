@@ -32,3 +32,5 @@ Metrics computation is achieved by meticulously traversing the generated Abstrac
 ### Assumptions and Simplifications
 This application is tailored for Kotlin files 
 and provides metrics for two simple aspects of code complexity.
+
+Note, that the construction `..<` cannot be parsed by `kotlin.ast`. 

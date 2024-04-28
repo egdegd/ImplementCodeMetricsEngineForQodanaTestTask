@@ -1,3 +1,4 @@
+import org.antlr.v4.kotlinruntime.misc.ParseCancellationException
 import java.io.File
 
 fun main() {
@@ -45,7 +46,7 @@ fun main() {
                 }
             }
         }
-    } catch (e: Exception) {
+    } catch (_: ParseCancellationException) {
         println("This file can't be parsed.")
     }
 }
